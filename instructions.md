@@ -40,7 +40,7 @@ Please binary selection:
 All three commands do the same setup:
 
 ```bash
-cd ~/Desktop/test
+cd please-hands-on
 
 make setup
 just setup
