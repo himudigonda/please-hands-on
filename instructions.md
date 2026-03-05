@@ -1,5 +1,9 @@
 # TaskPulse Instructions
 
+Related docs:
+- `docs/setup-and-run.md`
+- `docs/benchmark-methodology.md`
+
 ## 1. Prerequisites
 
 Required tools:
@@ -9,6 +13,19 @@ Required tools:
 - `just`
 - `please`
 - Optional for Docker mode: `docker`, `docker compose`
+
+Install `please` quickly:
+
+```bash
+# latest release channel (default)
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | bash
+
+# stable-only channel
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | PLEASE_CHANNEL=stable bash
+
+# pinned release candidate
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | PLEASE_VERSION=v0.4.0-rc.1 bash
+```
 
 Quick checks:
 
@@ -27,7 +44,7 @@ Python interpreter selection in this repo:
 
 Please binary selection:
 - The benchmark harness auto-detects a compatible `please` binary for this `pleasefile` schema.
-- This project uses `pleasefile` schema `0.3`, so use `please >= 0.3.0-beta.1`.
+- This project uses `pleasefile` schema `0.4`, so use `please >= 0.4.0-rc.1`.
 - If your PATH `please` is older, set:
   ```bash
   export PLEASE_BIN=/absolute/path/to/please
@@ -200,7 +217,7 @@ The `--explain` output should show whether Please reused cache or why it rebuilt
 ### Missing tool on PATH
 - Install missing tool and re-run setup.
 - Verify with `command -v <tool>`.
-- If `please` on PATH is older than 0.3:
+- If `please` on PATH is older than 0.4:
   ```bash
   export PLEASE_BIN=/absolute/path/to/please
   export PLEASE="${PLEASE_BIN}"

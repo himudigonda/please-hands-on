@@ -3,23 +3,45 @@
 TaskPulse is a fullstack sample project designed to benchmark and compare `make`, `just`, and `please` on the exact same workflow.
 
 See [instructions.md](instructions.md) for full setup, benchmark methodology, and troubleshooting.
+Additional docs:
+- [docs/setup-and-run.md](docs/setup-and-run.md)
+- [docs/benchmark-methodology.md](docs/benchmark-methodology.md)
+
+## Install Please (recommended)
+
+Latest release (default):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | bash
+```
+
+Stable-only channel:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | PLEASE_CHANNEL=stable bash
+```
+
+Pinned RC:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | PLEASE_VERSION=v0.4.0-rc.1 bash
+```
 
 Quickstart:
 
 ```bash
 git clone https://github.com/himudigonda/please-hands-on.git
 cd please-hands-on
-make setup
-make ci
-python3 scripts/benchmark.py
-```
-
-Please-first quickstart:
-
-```bash
 please --workspace . run setup
 please --workspace . run ci --explain
 please --workspace . run bench
+```
+
+Alternative runner parity:
+
+```bash
+make setup && make ci && make bench
+just setup && just ci && just bench
 ```
 
 If your installed `please` is older than the `pleasefile` schema, set:
@@ -34,6 +56,8 @@ Then use:
 ```bash
 $PLEASE --workspace . run ci --explain
 ```
+
+This repository uses `pleasefile` schema `0.4`.
 
 ## Committed Benchmark Artifacts
 
