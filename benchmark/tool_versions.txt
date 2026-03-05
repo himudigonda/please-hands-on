@@ -1,0 +1,9 @@
+generated_utc=2026-03-05T04:31:27Z
+git=git version 2.50.1 (Apple Git-155)
+make=GNU Make 3.81
+just=just 1.46.0
+please=please 0.2.0
+python3=Python 3.14.3
+node=v25.7.0
+npm=11.10.1
+docker=Docker version 28.5.2, build ecc6942
