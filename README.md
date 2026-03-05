@@ -24,7 +24,7 @@ curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh 
 Pinned RC:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | PLEASE_VERSION=v0.4.0-rc.1 bash
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | PLEASE_VERSION=v0.5.0 bash
 ```
 
 Quickstart:
@@ -57,7 +57,7 @@ Then use:
 $PLEASE --workspace . run ci --explain
 ```
 
-This repository uses `pleasefile` schema `0.4`.
+This repository uses `pleasefile` schema `0.5`.
 
 ## Committed Benchmark Artifacts
 

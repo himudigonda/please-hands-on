@@ -24,7 +24,7 @@ curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh 
 curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | PLEASE_CHANNEL=stable bash
 
 # pinned release candidate
-curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | PLEASE_VERSION=v0.4.0-rc.1 bash
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | PLEASE_VERSION=v0.5.0 bash
 ```
 
 Quick checks:
@@ -44,7 +44,7 @@ Python interpreter selection in this repo:
 
 Please binary selection:
 - The benchmark harness auto-detects a compatible `please` binary for this `pleasefile` schema.
-- This project uses `pleasefile` schema `0.4`, so use `please >= 0.4.0-rc.1`.
+- This project uses `pleasefile` schema `0.5`, so use `please >= 0.5.0`.
 - If your PATH `please` is older, set:
   ```bash
   export PLEASE_BIN=/absolute/path/to/please
@@ -217,7 +217,7 @@ The `--explain` output should show whether Please reused cache or why it rebuilt
 ### Missing tool on PATH
 - Install missing tool and re-run setup.
 - Verify with `command -v <tool>`.
-- If `please` on PATH is older than 0.4:
+- If `please` on PATH is older than 0.5:
   ```bash
   export PLEASE_BIN=/absolute/path/to/please
   export PLEASE="${PLEASE_BIN}"
