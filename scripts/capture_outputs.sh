@@ -24,15 +24,11 @@ except Exception:
     sys.exit(1)
 
 version_token = out.split()[-1]
-if "-" in version_token:
-    # This lab needs stable parser compatibility for pleasefile version 0.2.
-    sys.exit(1)
-
 m = re.search(r"(\d+)\.(\d+)\.(\d+)", version_token)
 if not m:
     sys.exit(1)
 major, minor, patch = map(int, m.groups())
-sys.exit(0 if (major, minor, patch) >= (0, 2, 0) else 1)
+sys.exit(0 if (major, minor, patch) >= (0, 3, 0) else 1)
 PY
 }
 
@@ -58,7 +54,7 @@ resolve_please_bin() {
     return
   fi
 
-  echo "No compatible please binary found (need >= 0.2.0). Set PLEASE_BIN explicitly." >&2
+  echo "No compatible please binary found (need >= 0.3.0). Set PLEASE_BIN explicitly." >&2
   exit 1
 }
 

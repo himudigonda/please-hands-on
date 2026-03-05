@@ -14,6 +14,14 @@ make ci
 python3 scripts/benchmark.py
 ```
 
+Please-first quickstart:
+
+```bash
+please --workspace . run setup
+please --workspace . run ci --explain
+please --workspace . run bench
+```
+
 If your installed `please` is older than the `pleasefile` schema, set:
 
 ```bash

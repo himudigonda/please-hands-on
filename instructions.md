@@ -27,8 +27,8 @@ Python interpreter selection in this repo:
 
 Please binary selection:
 - The benchmark harness auto-detects a compatible `please` binary for this `pleasefile` schema.
-- This project uses `pleasefile` schema `0.2`, so use `please >= 0.2.0`.
-- If your PATH `please` is older (for example `0.2.0-beta.1`), set:
+- This project uses `pleasefile` schema `0.3`, so use `please >= 0.3.0-beta.1`.
+- If your PATH `please` is older, set:
   ```bash
   export PLEASE_BIN=/absolute/path/to/please
   export PLEASE="${PLEASE_BIN}"
@@ -200,7 +200,7 @@ The `--explain` output should show whether Please reused cache or why it rebuilt
 ### Missing tool on PATH
 - Install missing tool and re-run setup.
 - Verify with `command -v <tool>`.
-- If `please` on PATH is older than 0.2:
+- If `please` on PATH is older than 0.3:
   ```bash
   export PLEASE_BIN=/absolute/path/to/please
   export PLEASE="${PLEASE_BIN}"
