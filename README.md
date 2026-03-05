@@ -7,7 +7,8 @@ See [instructions.md](instructions.md) for full setup, benchmark methodology, an
 Quickstart:
 
 ```bash
-cd ~/Desktop/test
+git clone https://github.com/himudigonda/please-hands-on.git
+cd please-hands-on
 make setup
 make ci
 python3 scripts/benchmark.py
@@ -24,4 +25,24 @@ Then use:
 
 ```bash
 $PLEASE --workspace . run ci --explain
+```
+
+## Committed Benchmark Artifacts
+
+This repo commits reproducible benchmark and command-output artifacts under `benchmark/`:
+
+- `benchmark.csv`
+- `benchmark.txt`
+- `make_ouptut.txt` (intentional typo kept for compatibility)
+- `make_output.txt`
+- `just_output.txt`
+- `please_output.txt`
+- `system_info.txt`
+- `tool_versions.txt`
+- `artifact_manifest.txt`
+
+To regenerate all output artifacts in one command:
+
+```bash
+./scripts/capture_outputs.sh
 ```

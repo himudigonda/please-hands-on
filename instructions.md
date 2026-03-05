@@ -116,7 +116,35 @@ Artifacts produced:
 - `benchmark/benchmark.csv`
 - `benchmark/benchmark.txt`
 
-## 6. What Benchmark Scenarios Mean
+## 6. Reproduce Captured Outputs
+
+Generate full runner command outputs and benchmark artifacts:
+
+```bash
+./scripts/capture_outputs.sh
+```
+
+This command captures deterministic logs for:
+- `make`: `clean setup db_reset backend_test frontend_build ci bench`
+- `just`: `clean setup db_reset backend_test frontend_build ci bench`
+- `please`: `clean setup db_reset backend_test frontend_build ci bench` (with `--explain`)
+
+The script writes section headers with command, timestamp, exit code, and elapsed seconds.
+
+## 7. Where to Find Logs and Reports
+
+All committed artifacts are in `benchmark/`:
+- `benchmark.csv`
+- `benchmark.txt`
+- `make_ouptut.txt` (intentional typo retained)
+- `make_output.txt`
+- `just_output.txt`
+- `please_output.txt`
+- `system_info.txt`
+- `tool_versions.txt`
+- `artifact_manifest.txt`
+
+## 8. What Benchmark Scenarios Mean
 
 Scenarios measured per tool (`make`, `just`, `please`):
 - `cold_ci`: clean outputs and run full `ci`.
@@ -134,7 +162,7 @@ Interpretation guidance:
 - Cold runs and true content-change runs can be slower in this lab because Please stages execution and validates task contracts.
 - Use `please --workspace . run ci --explain` to verify exactly why a task reran.
 
-## 7. Realtime Demo Commands
+## 9. Realtime Demo Commands
 
 Run each runner CI path:
 
@@ -159,7 +187,7 @@ $PLEASE --workspace . run ci --explain
 
 The `--explain` output should show whether Please reused cache or why it rebuilt.
 
-## 8. Troubleshooting
+## 10. Troubleshooting
 
 ### Port already in use
 - Kill existing servers on `8000` or `5173`.
@@ -172,6 +200,11 @@ The `--explain` output should show whether Please reused cache or why it rebuilt
 ### Missing tool on PATH
 - Install missing tool and re-run setup.
 - Verify with `command -v <tool>`.
+- If `please` on PATH is older than 0.2:
+  ```bash
+  export PLEASE_BIN=/absolute/path/to/please
+  export PLEASE="${PLEASE_BIN}"
+  ```
 
 ### Stale cache/artifacts
 - Clean project artifacts:
@@ -190,7 +223,7 @@ The `--explain` output should show whether Please reused cache or why it rebuilt
   # or please --workspace . run db_reset
   ```
 
-## 9. Task Surface (Parity)
+## 11. Task Surface (Parity)
 
 All three runners expose the same semantic tasks:
 - `setup`
