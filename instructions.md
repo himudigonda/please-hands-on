@@ -129,6 +129,11 @@ Each scenario runs:
 - 1 warmup iteration
 - 7 measured iterations
 
+Interpretation guidance:
+- Expect `please` to be strongest on warm reruns and touch-without-content runs because it can skip unchanged tasks via content hashing.
+- Cold runs and true content-change runs can be slower in this lab because Please stages execution and validates task contracts.
+- Use `please --workspace . run ci --explain` to verify exactly why a task reran.
+
 ## 7. Realtime Demo Commands
 
 Run each runner CI path:
