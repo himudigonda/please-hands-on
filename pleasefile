@@ -1,0 +1,82 @@
+[please]
+version = "0.2"
+
+[task.setup]
+inputs = ["backend/requirements.txt", "backend/requirements-dev.txt", "frontend/package.json", "scripts/select_python.sh"]
+outputs = [".please/stamps/setup.ok"]
+isolation = "off"
+run = """
+STAGE=$(pwd -P)
+ROOT=$(pwd -P | sed -E 's#/.please/stage/[^/]+$##')
+PY=$("$ROOT/scripts/select_python.sh")
+$PY -m venv --clear \"$ROOT/backend/.venv\"
+\"$ROOT/backend/.venv/bin/pip\" install -r \"$ROOT/backend/requirements-dev.txt\"
+cd \"$ROOT/frontend\" && npm install
+mkdir -p \"$STAGE/.please/stamps\" && printf 'ok\\n' > \"$STAGE/.please/stamps/setup.ok\"
+"""
+
+[task.db_reset]
+inputs = ["backend/scripts/reset_db.py", "backend/app/**/*.py"]
+outputs = ["backend/data/app.db"]
+isolation = "off"
+run = "PYTHONPATH=backend backend/.venv/bin/python backend/scripts/reset_db.py"
+
+[task.backend_test]
+deps = ["db_reset"]
+inputs = ["backend/app/**/*.py", "backend/tests/**/*.py"]
+outputs = [".please/stamps/backend_test.ok"]
+isolation = "off"
+run = "mkdir -p .please/stamps && PYTHONPATH=backend backend/.venv/bin/pytest backend/tests -q && printf 'ok\n' > .please/stamps/backend_test.ok"
+
+[task.frontend_build]
+deps = ["backend_test"]
+inputs = ["frontend/package.json", "frontend/src/**/*", "frontend/vite.config.ts", "frontend/index.html", "shared/task.schema.json"]
+outputs = ["frontend/dist"]
+isolation = "off"
+run = "cd frontend && npm run test -- --run && npm run build"
+
+[task.ci]
+deps = ["frontend_build"]
+inputs = ["pleasefile"]
+outputs = [".please/stamps/ci.ok"]
+isolation = "off"
+run = "mkdir -p .please/stamps && printf 'ok\n' > .please/stamps/ci.ok"
+
+[task.run_backend]
+inputs = ["backend/app/**/*.py", "backend/scripts/reset_db.py"]
+outputs = [".please/stamps/run_backend.started"]
+isolation = "off"
+run = """
+ROOT=$(pwd -P | sed -E 's#/.please/stage/[^/]+$##')
+mkdir -p .please/stamps && printf 'started\\n' > .please/stamps/run_backend.started
+cd \"$ROOT\" && PYTHONPATH=backend backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+"""
+
+[task.run_frontend]
+inputs = ["frontend/src/**/*", "frontend/package.json", "frontend/vite.config.ts", "frontend/index.html"]
+outputs = [".please/stamps/run_frontend.started"]
+isolation = "off"
+run = """
+ROOT=$(pwd -P | sed -E 's#/.please/stage/[^/]+$##')
+mkdir -p .please/stamps && printf 'started\\n' > .please/stamps/run_frontend.started
+cd \"$ROOT/frontend\" && npm run dev
+"""
+
+[task.clean]
+inputs = ["pleasefile"]
+outputs = [".please/stamps/clean.ok"]
+isolation = "off"
+run = """
+ROOT=$(pwd -P | sed -E 's#/.please/stage/[^/]+$##')
+rm -rf \"$ROOT/backend/.pytest_cache\"
+rm -f \"$ROOT/backend/data/app.db\"
+rm -rf \"$ROOT/frontend/dist\" \"$ROOT/frontend/.vite\"
+rm -f \"$ROOT/benchmark/benchmark.csv\" \"$ROOT/benchmark/benchmark.txt\"
+mkdir -p .please/stamps && printf 'ok\\n' > .please/stamps/clean.ok
+"""
+
+[task.bench]
+inputs = ["scripts/benchmark.py", "pleasefile", "Makefile", "justfile", "backend/app/**/*.py", "backend/tests/**/*.py", "frontend/src/**/*", "frontend/package.json", "frontend/vite.config.ts"]
+outputs = ["benchmark/benchmark.csv", "benchmark/benchmark.txt"]
+isolation = "off"
+run = "python3 scripts/benchmark.py"
