@@ -1,0 +1,56 @@
+TaskPulse Benchmark Report
+Generated: 2026-03-04T18:28:05
+
+System
+- platform: macOS-26.3-arm64-arm-64bit-Mach-O
+- python: 3.14.3
+- make: GNU Make 3.81
+- just: just 1.46.0
+- please: please 0.2.0
+
+Scenario Statistics (seconds)
+
+## cold_ci
+- make: mean=2.8568 median=2.8565 p95=2.8844 stddev=0.0173
+- just: mean=2.8628 median=2.8552 p95=2.9856 stddev=0.0604
+- please: mean=13.0940 median=13.1451 p95=13.3878 stddev=0.2251
+- speedup ratios vs please (mean):
+  - make: 0.22x
+  - just: 0.22x
+  - please: 1.00x
+
+## warm_ci
+- please: mean=0.0102 median=0.0097 p95=0.0132 stddev=0.0013
+- just: mean=2.8533 median=2.8395 p95=2.9588 stddev=0.0471
+- make: mean=2.8607 median=2.8103 p95=3.0165 stddev=0.0832
+- speedup ratios vs please (mean):
+  - please: 1.00x
+  - just: 279.94x
+  - make: 280.67x
+
+## touch_no_content_backend
+- please: mean=0.0107 median=0.0101 p95=0.0129 stddev=0.0013
+- make: mean=2.8831 median=2.8741 p95=2.9476 stddev=0.0377
+- just: mean=2.8865 median=2.8830 p95=2.9459 stddev=0.0373
+- speedup ratios vs please (mean):
+  - please: 1.00x
+  - make: 269.70x
+  - just: 270.01x
+
+## content_change_backend
+- just: mean=2.8646 median=2.8726 p95=2.9358 stddev=0.0481
+- make: mean=2.8728 median=2.8730 p95=2.9357 stddev=0.0375
+- please: mean=4.7464 median=4.7483 p95=4.8589 stddev=0.0790
+- speedup ratios vs please (mean):
+  - just: 0.60x
+  - make: 0.61x
+  - please: 1.00x
+
+## content_change_frontend
+- make: mean=2.8393 median=2.8445 p95=2.8682 stddev=0.0205
+- just: mean=2.8636 median=2.8633 p95=2.9448 stddev=0.0560
+- please: mean=6.2449 median=6.2232 p95=6.5123 stddev=0.1660
+- speedup ratios vs please (mean):
+  - make: 0.45x
+  - just: 0.46x
+  - please: 1.00x
