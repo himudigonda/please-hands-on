@@ -1,0 +1,114 @@
+:root {
+  color-scheme: light;
+  font-family: 'Avenir Next', 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at 10% 10%, #f7fff8, #eef3ff 55%, #fdf2f8);
+  color: #1c2130;
+}
+
+body {
+  margin: 0;
+}
+
+.container {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.hero {
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+}
+
+.hero p {
+  margin: 0;
+  color: #4a5168;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(37, 57, 92, 0.15);
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 10px 35px rgba(26, 36, 62, 0.08);
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.task-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.task-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+}
+
+.task-row.done span {
+  text-decoration: line-through;
+  color: #68708a;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  background: #25395c;
+  color: #fff;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1a2a45;
+}
+
+form {
+  display: grid;
+  gap: 0.6rem;
+}
+
+input {
+  border: 1px solid #ccd4e2;
+  border-radius: 8px;
+  padding: 0.6rem 0.7rem;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  font-weight: 600;
+}
+
+.error {
+  color: #9b1c1c;
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

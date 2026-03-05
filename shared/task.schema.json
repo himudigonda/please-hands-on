@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TaskPulseTask",
+  "type": "object",
+  "required": ["id", "title", "completed", "created_at"],
+  "properties": {
+    "id": { "type": "integer", "minimum": 1 },
+    "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "completed": { "type": "boolean" },
+    "created_at": { "type": "string" }
+  }
+}
