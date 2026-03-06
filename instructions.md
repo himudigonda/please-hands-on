@@ -11,20 +11,20 @@ Required tools:
 - `node` + `npm` (Node 20+ recommended)
 - `make`
 - `just`
-- `please`
+- `broski`
 - Optional for Docker mode: `docker`, `docker compose`
 
-Install `please` quickly:
+Install `broski` quickly:
 
 ```bash
 # latest release channel (default)
-curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Broski/main/install.sh | bash
 
 # stable-only channel
-curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | PLEASE_CHANNEL=stable bash
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Broski/main/install.sh | BROSKI_CHANNEL=stable bash
 
 # pinned release candidate
-curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | PLEASE_VERSION=v0.5.0 bash
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Broski/main/install.sh | BROSKI_VERSION=v0.5.0 bash
 ```
 
 Quick checks:
@@ -36,33 +36,33 @@ node --version
 npm --version
 make --version
 just --version
-please --version
+broski --version
 ```
 
 Python interpreter selection in this repo:
 - `setup` auto-selects in this order: `python3.13`, `python3.12`, `python3.11`, `python3`.
 
-Please binary selection:
-- The benchmark harness auto-detects a compatible `please` binary for this `pleasefile` schema.
-- This project uses `pleasefile` schema `0.5`, so use `please >= 0.5.0`.
-- If your PATH `please` is older, set:
+Broski binary selection:
+- The benchmark harness auto-detects a compatible `broski` binary for this `broskifile` schema.
+- This project uses `broskifile` schema `0.5`, so use `broski >= 0.5.1`.
+- If your PATH `broski` is older, set:
   ```bash
-  export PLEASE_BIN=/absolute/path/to/please
-  export PLEASE="${PLEASE_BIN}"
+  export BROSKI_BIN=/absolute/path/to/broski
+  export PLEASE="${BROSKI_BIN}"
   ```
-  Then run commands with `$PLEASE` instead of `please`.
+  Then run commands with `$PLEASE` instead of `broski`.
 
 ## 2. One-command Setup Per Runner
 
 All three commands do the same setup:
 
 ```bash
-cd please-hands-on
+cd broski-hands-on
 
 make setup
 just setup
-please --workspace . run setup
-# or, if PATH please is older:
+broski --workspace . run setup
+# or, if PATH broski is older:
 $PLEASE --workspace . run setup
 ```
 
@@ -77,7 +77,7 @@ Backend:
 ```bash
 make run_backend
 # or: just run_backend
-# or: please --workspace . run run_backend
+# or: broski --workspace . run run_backend
 ```
 
 Frontend (separate terminal):
@@ -85,7 +85,7 @@ Frontend (separate terminal):
 ```bash
 make run_frontend
 # or: just run_frontend
-# or: please --workspace . run run_frontend
+# or: broski --workspace . run run_frontend
 ```
 
 Open UI at: [http://127.0.0.1:5173](http://127.0.0.1:5173)
@@ -124,7 +124,7 @@ Or via runner task:
 ```bash
 make bench
 just bench
-please --workspace . run bench
+broski --workspace . run bench
 # or:
 $PLEASE --workspace . run bench
 ```
@@ -144,7 +144,7 @@ Generate full runner command outputs and benchmark artifacts:
 This command captures deterministic logs for:
 - `make`: `clean setup db_reset backend_test frontend_build ci bench`
 - `just`: `clean setup db_reset backend_test frontend_build ci bench`
-- `please`: `clean setup db_reset backend_test frontend_build ci bench` (with `--explain`)
+- `broski`: `clean setup db_reset backend_test frontend_build ci bench` (with `--explain`)
 
 The script writes section headers with command, timestamp, exit code, and elapsed seconds.
 
@@ -156,14 +156,13 @@ All committed artifacts are in `benchmark/`:
 - `make_ouptut.txt` (intentional typo retained)
 - `make_output.txt`
 - `just_output.txt`
-- `please_output.txt`
 - `system_info.txt`
 - `tool_versions.txt`
 - `artifact_manifest.txt`
 
 ## 8. What Benchmark Scenarios Mean
 
-Scenarios measured per tool (`make`, `just`, `please`):
+Scenarios measured per tool (`make`, `just`, `broski`):
 - `cold_ci`: clean outputs and run full `ci`.
 - `warm_ci`: run `ci` twice; second run measured.
 - `touch_no_content_backend`: touch backend file without changing content.
@@ -175,9 +174,9 @@ Each scenario runs:
 - 7 measured iterations
 
 Interpretation guidance:
-- Expect `please` to be strongest on warm reruns and touch-without-content runs because it can skip unchanged tasks via content hashing.
-- Cold runs and true content-change runs can be slower in this lab because Please stages execution and validates task contracts.
-- Use `please --workspace . run ci --explain` to verify exactly why a task reran.
+- Expect `broski` to be strongest on warm reruns and touch-without-content runs because it can skip unchanged tasks via content hashing.
+- Cold runs and true content-change runs can be slower in this lab because Broski stages execution and validates task contracts.
+- Use `broski --workspace . run ci --explain` to verify exactly why a task reran.
 
 ## 9. Realtime Demo Commands
 
@@ -186,7 +185,7 @@ Run each runner CI path:
 ```bash
 make ci
 just ci
-please --workspace . run ci --explain
+broski --workspace . run ci --explain
 # or:
 $PLEASE --workspace . run ci --explain
 ```
@@ -197,12 +196,12 @@ Touch-without-content behavior:
 touch backend/app/main.py
 make ci
 just ci
-please --workspace . run ci --explain
+broski --workspace . run ci --explain
 # or:
 $PLEASE --workspace . run ci --explain
 ```
 
-The `--explain` output should show whether Please reused cache or why it rebuilt.
+The `--explain` output should show whether Broski reused cache or why it rebuilt.
 
 ## 10. Troubleshooting
 
@@ -217,10 +216,10 @@ The `--explain` output should show whether Please reused cache or why it rebuilt
 ### Missing tool on PATH
 - Install missing tool and re-run setup.
 - Verify with `command -v <tool>`.
-- If `please` on PATH is older than 0.5:
+- If `broski` on PATH is older than 0.5:
   ```bash
-  export PLEASE_BIN=/absolute/path/to/please
-  export PLEASE="${PLEASE_BIN}"
+  export BROSKI_BIN=/absolute/path/to/broski
+  export PLEASE="${BROSKI_BIN}"
   ```
 
 ### Stale cache/artifacts
@@ -228,7 +227,7 @@ The `--explain` output should show whether Please reused cache or why it rebuilt
   ```bash
   make clean
   # or just clean
-  # or please --workspace . run clean
+  # or broski --workspace . run clean
   ```
 
 ### SQLite permission/reset issues
@@ -237,7 +236,7 @@ The `--explain` output should show whether Please reused cache or why it rebuilt
   ```bash
   make db_reset
   # or just db_reset
-  # or please --workspace . run db_reset
+  # or broski --workspace . run db_reset
   ```
 
 ## 11. Task Surface (Parity)

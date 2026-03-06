@@ -16,11 +16,11 @@ db_reset:
 
 backend_test: db_reset
     @in backend/app/**/*.py backend/tests/**/*.py
-    @out .please/stamps/backend_test.ok
+    @out .broski/stamps/backend_test.ok
     @isolation off
-    mkdir -p .please/stamps
+    mkdir -p .broski/stamps
     PYTHONPATH=backend backend/.venv/bin/pytest backend/tests -q
-    printf 'ok\n' > .please/stamps/backend_test.ok
+    printf 'ok\n' > .broski/stamps/backend_test.ok
 
 frontend_build: backend_test
     @in frontend/package.json frontend/src/**/* frontend/vite.config.ts frontend/index.html shared/task.schema.json
@@ -31,11 +31,11 @@ frontend_build: backend_test
     npm run build
 
 ci: frontend_build
-    @in pleasefile
-    @out .please/stamps/ci.ok
+    @in broskifile
+    @out .broski/stamps/ci.ok
     @isolation off
-    mkdir -p .please/stamps
-    printf 'ok\n' > .please/stamps/ci.ok
+    mkdir -p .broski/stamps
+    printf 'ok\n' > .broski/stamps/ci.ok
 
 run_backend:
     @mode interactive
@@ -57,7 +57,7 @@ clean:
     rm -f benchmark/benchmark.csv benchmark/benchmark.txt
 
 bench:
-    @in scripts/benchmark.py pleasefile Makefile justfile backend/app/**/*.py backend/tests/**/*.py frontend/src/**/* frontend/package.json frontend/vite.config.ts
+    @in scripts/benchmark.py broskifile Makefile justfile backend/app/**/*.py backend/tests/**/*.py frontend/src/**/* frontend/package.json frontend/vite.config.ts
     @out benchmark/benchmark.csv benchmark/benchmark.txt
     @isolation off
     python3 scripts/benchmark.py

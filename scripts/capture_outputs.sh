@@ -10,7 +10,7 @@ trap 'rm -rf "$TMP_DIR"' EXIT
 mkdir -p "$BENCH_DIR"
 mkdir -p "$LIVE_DIR"
 
-check_please_compatible() {
+check_broski_compatible() {
   local bin="$1"
   python3 - "$bin" <<'PY'
 import re
@@ -28,33 +28,33 @@ m = re.search(r"(\d+)\.(\d+)\.(\d+)", version_token)
 if not m:
     sys.exit(1)
 major, minor, patch = map(int, m.groups())
-sys.exit(0 if (major, minor, patch) >= (0, 3, 0) else 1)
+sys.exit(0 if (major, minor, patch) >= (0, 5, 0) else 1)
 PY
 }
 
-resolve_please_bin() {
-  if [[ -n "${PLEASE_BIN:-}" ]] && check_please_compatible "$PLEASE_BIN"; then
-    printf '%s\n' "$PLEASE_BIN"
+resolve_broski_bin() {
+  if [[ -n "${BROSKI_BIN:-}" ]] && check_broski_compatible "$BROSKI_BIN"; then
+    printf '%s\n' "$BROSKI_BIN"
     return
   fi
 
-  if command -v please >/dev/null 2>&1; then
+  if command -v broski >/dev/null 2>&1; then
     local path_bin
-    path_bin="$(command -v please)"
-    if check_please_compatible "$path_bin"; then
+    path_bin="$(command -v broski)"
+    if check_broski_compatible "$path_bin"; then
       printf '%s\n' "$path_bin"
       return
     fi
   fi
 
   local dev_bin
-  dev_bin="$HOME/Documents/Projects/Please/target/debug/please"
-  if [[ -x "$dev_bin" ]] && check_please_compatible "$dev_bin"; then
+  dev_bin="$HOME/Documents/Projects/Broski/target/debug/broski"
+  if [[ -x "$dev_bin" ]] && check_broski_compatible "$dev_bin"; then
     printf '%s\n' "$dev_bin"
     return
   fi
 
-  echo "No compatible please binary found (need >= 0.3.0). Set PLEASE_BIN explicitly." >&2
+  echo "No compatible broski binary found (need >= 0.5.0). Set BROSKI_BIN explicitly." >&2
   exit 1
 }
 
@@ -151,7 +151,7 @@ write_tool_versions() {
     echo "git=$({ git --version 2>/dev/null || true; } | head -n 1)"
     echo "make=$({ make --version 2>/dev/null || true; } | head -n 1)"
     echo "just=$({ just --version 2>/dev/null || true; } | head -n 1)"
-    echo "please=$({ "$PLEASE_BIN" --version 2>/dev/null || true; } | head -n 1)"
+    echo "broski=$({ "$BROSKI_BIN" --version 2>/dev/null || true; } | head -n 1)"
     echo "python3=$({ python3 --version 2>/dev/null || true; } | head -n 1)"
     echo "node=$({ node --version 2>/dev/null || true; } | head -n 1)"
     echo "npm=$({ npm --version 2>/dev/null || true; } | head -n 1)"
@@ -205,14 +205,14 @@ run_for_tool() {
       write_section "$log_file" "just ci" just ci
       write_section "$log_file" "just bench" just bench
       ;;
-    please)
-      write_section "$log_file" "please run clean --explain" "$PLEASE_BIN" --workspace . run clean --explain
-      write_section "$log_file" "please run setup --explain" "$PLEASE_BIN" --workspace . run setup --explain
-      write_section "$log_file" "please run db_reset --explain" "$PLEASE_BIN" --workspace . run db_reset --explain
-      write_section "$log_file" "please run backend_test --explain" "$PLEASE_BIN" --workspace . run backend_test --explain
-      write_section "$log_file" "please run frontend_build --explain" "$PLEASE_BIN" --workspace . run frontend_build --explain
-      write_section "$log_file" "please run ci --explain" "$PLEASE_BIN" --workspace . run ci --explain
-      write_section "$log_file" "please run bench --explain" "$PLEASE_BIN" --workspace . run bench --explain
+    broski)
+      write_section "$log_file" "broski run clean --explain" "$BROSKI_BIN" --workspace . run clean --explain
+      write_section "$log_file" "broski run setup --explain" "$BROSKI_BIN" --workspace . run setup --explain
+      write_section "$log_file" "broski run db_reset --explain" "$BROSKI_BIN" --workspace . run db_reset --explain
+      write_section "$log_file" "broski run backend_test --explain" "$BROSKI_BIN" --workspace . run backend_test --explain
+      write_section "$log_file" "broski run frontend_build --explain" "$BROSKI_BIN" --workspace . run frontend_build --explain
+      write_section "$log_file" "broski run ci --explain" "$BROSKI_BIN" --workspace . run ci --explain
+      write_section "$log_file" "broski run bench --explain" "$BROSKI_BIN" --workspace . run bench --explain
       ;;
     *)
       echo "Unknown tool: $tool" >&2
@@ -222,17 +222,17 @@ run_for_tool() {
 }
 
 cd "$ROOT"
-PLEASE_BIN="$(resolve_please_bin)"
-export PLEASE_BIN
+BROSKI_BIN="$(resolve_broski_bin)"
+export BROSKI_BIN
 
-echo "Using please binary: $PLEASE_BIN"
+echo "Using broski binary: $BROSKI_BIN"
 
-TOOLS="${TOOL_FILTER:-make just please}"
+TOOLS="${TOOL_FILTER:-make just broski}"
 for tool in $TOOLS; do
   run_for_tool "$tool" "$LIVE_DIR/$tool.log"
 done
 
-for tool in make just please; do
+for tool in make just broski; do
   if [[ ! -f "$LIVE_DIR/$tool.log" ]]; then
     echo "Missing log file for tool '$tool' at $LIVE_DIR/$tool.log" >&2
     exit 1
@@ -242,7 +242,7 @@ done
 cp "$LIVE_DIR/make.log" "$BENCH_DIR/make_ouptut.txt"
 cp "$LIVE_DIR/make.log" "$BENCH_DIR/make_output.txt"
 cp "$LIVE_DIR/just.log" "$BENCH_DIR/just_output.txt"
-cp "$LIVE_DIR/please.log" "$BENCH_DIR/please_output.txt"
+cp "$LIVE_DIR/broski.log" "$BENCH_DIR/broski_output.txt"
 
 write_system_info
 write_tool_versions

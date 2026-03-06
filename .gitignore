@@ -13,6 +13,7 @@ frontend/*.tsbuildinfo
 
 # Local runtime/cache
 .please/
+.broski/
 backend/data/*.db
 benchmark/live/
 

@@ -1,6 +1,6 @@
 # Benchmark Methodology
 
-TaskPulse compares `make`, `just`, and `please` on equivalent workflows.
+TaskPulse compares `make`, `just`, and `broski` on equivalent workflows.
 
 ## Scenarios
 
@@ -39,7 +39,7 @@ CSV columns:
 
 ## Interpretation notes
 
-- `please` should dominate warm/no-content-change paths due to content-hash skipping.
+- `broski` should dominate warm/no-content-change paths due to content-hash skipping.
 - `make` can rerun on timestamp-only touches.
 - `just` runs recipes unless explicit skip logic is encoded in the recipe itself.
 

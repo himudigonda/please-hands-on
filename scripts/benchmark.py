@@ -33,18 +33,18 @@ class BenchmarkError(RuntimeError):
     pass
 
 
-def resolve_please_binary() -> str:
+def resolve_broski_binary() -> str:
     candidates: list[str] = []
-    env_candidate = os.environ.get("PLEASE_BIN")
+    env_candidate = os.environ.get("BROSKI_BIN")
     if env_candidate:
         candidates.append(env_candidate)
 
-    path_candidate = shutil.which("please")
+    path_candidate = shutil.which("broski")
     if path_candidate:
         candidates.append(path_candidate)
 
     dev_candidate = (
-        Path.home() / "Documents" / "Projects" / "Please" / "target" / "debug" / "please"
+        Path.home() / "Documents" / "Projects" / "Please" / "target" / "debug" / "broski"
     )
     if dev_candidate.exists():
         candidates.append(str(dev_candidate))
@@ -67,12 +67,12 @@ def resolve_please_binary() -> str:
             return candidate
 
     raise BenchmarkError(
-        "No compatible please binary found for this pleasefile schema. "
-        "Set PLEASE_BIN to an explicit compatible binary path."
+        "No compatible broski binary found for this broskifile schema. "
+        "Set BROSKI_BIN to an explicit compatible binary path."
     )
 
 
-def build_tools(please_bin: str) -> dict[str, dict[str, list[str]]]:
+def build_tools(broski_bin: str) -> dict[str, dict[str, list[str]]]:
     return {
         "make": {
             "setup": ["make", "setup"],
@@ -84,10 +84,10 @@ def build_tools(please_bin: str) -> dict[str, dict[str, list[str]]]:
             "clean": ["just", "clean"],
             "ci": ["just", "ci"],
         },
-        "please": {
-            "setup": [please_bin, "--workspace", ".", "run", "setup"],
-            "clean": [please_bin, "--workspace", ".", "run", "clean"],
-            "ci": [please_bin, "--workspace", ".", "run", "ci"],
+        "broski": {
+            "setup": [broski_bin, "--workspace", ".", "run", "setup"],
+            "clean": [broski_bin, "--workspace", ".", "run", "clean"],
+            "ci": [broski_bin, "--workspace", ".", "run", "ci"],
         },
     }
 
@@ -134,9 +134,9 @@ def run_scenario(
     frontend_app = ROOT / "frontend" / "src" / "App.tsx"
 
     if scenario == "cold_ci":
-        # Keep cold runs truly cold for Please across warmup + measured iterations.
-        if tool == "please":
-            clear_please_state()
+        # Keep cold runs truly cold for Broski across warmup + measured iterations.
+        if tool == "broski":
+            clear_broski_state()
         run_command(cmd_clean, f"{tool}:{scenario}:clean")
         return run_command(cmd_ci, f"{tool}:{scenario}:ci")
 
@@ -176,19 +176,19 @@ def run_scenario(
 
 def reset_tool_state(tools: dict[str, dict[str, list[str]]], tool: str, scenario: str) -> None:
     run_command(tools[tool]["clean"], f"{tool}:{scenario}:preclean")
-    if tool != "please":
+    if tool != "broski":
         return
 
-    clear_please_state()
+    clear_broski_state()
 
 
-def clear_please_state() -> None:
-    # Fully reset Please cache metadata/artifacts without deleting the active
+def clear_broski_state() -> None:
+    # Fully reset Broski cache metadata/artifacts without deleting the active
     # stage directory that the running process may rely on.
     for path in [
-        ROOT / ".please" / "cache",
-        ROOT / ".please" / "tx",
-        ROOT / ".please" / "stamps",
+        ROOT / ".broski" / "cache",
+        ROOT / ".broski" / "tx",
+        ROOT / ".broski" / "stamps",
     ]:
         if path.exists():
             shutil.rmtree(path)
@@ -229,7 +229,7 @@ def write_summary(rows: list[dict[str, str]], tools: dict[str, dict[str, list[st
     lines.append(f"- python: {platform.python_version()}")
     lines.append(f"- make: {command_output(['make', '--version'])}")
     lines.append(f"- just: {command_output(['just', '--version'])}")
-    lines.append(f"- please: {command_output([tools['please']['ci'][0], '--version'])}")
+    lines.append(f"- broski: {command_output([tools['broski']['ci'][0], '--version'])}")
     lines.append("")
 
     lines.append("Scenario Statistics (seconds)")
@@ -251,13 +251,13 @@ def write_summary(rows: list[dict[str, str]], tools: dict[str, dict[str, list[st
                 f"p95={numbers['p95']:.4f} stddev={numbers['stddev']:.4f}"
             )
 
-        please_stats = dict(scenario_table).get("please") if scenario_table else None
-        if please_stats is not None:
-            lines.append("- speedup ratios vs please (mean):")
+        broski_stats = dict(scenario_table).get("broski") if scenario_table else None
+        if broski_stats is not None:
+            lines.append("- speedup ratios vs broski (mean):")
             for tool, numbers in scenario_table:
                 ratio = (
-                    numbers["mean"] / please_stats["mean"]
-                    if please_stats["mean"] > 0
+                    numbers["mean"] / broski_stats["mean"]
+                    if broski_stats["mean"] > 0
                     else float("inf")
                 )
                 lines.append(f"  - {tool}: {ratio:.2f}x")
@@ -268,17 +268,17 @@ def write_summary(rows: list[dict[str, str]], tools: dict[str, dict[str, list[st
 def main() -> int:
     BENCH_DIR.mkdir(parents=True, exist_ok=True)
 
-    please_bin = resolve_please_binary()
-    tools = build_tools(please_bin)
+    broski_bin = resolve_broski_binary()
+    tools = build_tools(broski_bin)
 
     for tool in tools:
-        if tool == "please":
+        if tool == "broski":
             continue
         if shutil.which(tool) is None:
             print(f"Missing required tool on PATH: {tool}", file=sys.stderr)
             return 1
 
-    print(f"Using please binary: {please_bin}", flush=True)
+    print(f"Using broski binary: {broski_bin}", flush=True)
     print("Running setup once per tool...", flush=True)
     for tool in tools:
         run_command(tools[tool]["setup"], f"{tool}:setup")

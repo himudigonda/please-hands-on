@@ -1,40 +1,40 @@
 # TaskPulse Benchmark Lab
 
-TaskPulse is a fullstack sample project designed to benchmark and compare `make`, `just`, and `please` on the exact same workflow.
+TaskPulse is a fullstack sample project designed to benchmark and compare `make`, `just`, and `broski` on the exact same workflow.
 
 See [instructions.md](instructions.md) for full setup, benchmark methodology, and troubleshooting.
 Additional docs:
 - [docs/setup-and-run.md](docs/setup-and-run.md)
 - [docs/benchmark-methodology.md](docs/benchmark-methodology.md)
 
-## Install Please (recommended)
+## Install Broski (recommended)
 
 Latest release (default):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Broski/main/install.sh | bash
 ```
 
 Stable-only channel:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | PLEASE_CHANNEL=stable bash
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Broski/main/install.sh | BROSKI_CHANNEL=stable bash
 ```
 
 Pinned RC:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | PLEASE_VERSION=v0.5.0 bash
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Broski/main/install.sh | BROSKI_VERSION=v0.5.0 bash
 ```
 
 Quickstart:
 
 ```bash
-git clone https://github.com/himudigonda/please-hands-on.git
-cd please-hands-on
-please --workspace . run setup
-please --workspace . run ci --explain
-please --workspace . run bench
+git clone https://github.com/himudigonda/broski-hands-on.git
+cd broski-hands-on
+broski --workspace . run setup
+broski --workspace . run ci --explain
+broski --workspace . run bench
 ```
 
 Alternative runner parity:
@@ -44,11 +44,11 @@ make setup && make ci && make bench
 just setup && just ci && just bench
 ```
 
-If your installed `please` is older than the `pleasefile` schema, set:
+If your installed `broski` is older than the `broskifile` schema, set:
 
 ```bash
-export PLEASE_BIN=/absolute/path/to/please
-export PLEASE="$PLEASE_BIN"
+export BROSKI_BIN=/absolute/path/to/broski
+export PLEASE="$BROSKI_BIN"
 ```
 
 Then use:
@@ -57,7 +57,7 @@ Then use:
 $PLEASE --workspace . run ci --explain
 ```
 
-This repository uses `pleasefile` schema `0.5`.
+This repository uses `broskifile` schema `0.5`.
 
 ## Committed Benchmark Artifacts
 
@@ -68,7 +68,6 @@ This repo commits reproducible benchmark and command-output artifacts under `ben
 - `make_ouptut.txt` (intentional typo kept for compatibility)
 - `make_output.txt`
 - `just_output.txt`
-- `please_output.txt`
 - `system_info.txt`
 - `tool_versions.txt`
 - `artifact_manifest.txt`

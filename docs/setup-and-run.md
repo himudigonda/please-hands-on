@@ -1,21 +1,21 @@
 # Setup and Run Guide
 
-## Install Please
+## Install Broski
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/himudigonda/Please/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/himudigonda/Broski/main/install.sh | bash
 ```
 
 ## Project setup
 
 ```bash
-please --workspace . run setup
+broski --workspace . run setup
 ```
 
 ## Run backend
 
 ```bash
-please --workspace . run run_backend
+broski --workspace . run run_backend
 ```
 
 Backend health endpoint:
@@ -27,7 +27,7 @@ Backend health endpoint:
 Open a second terminal:
 
 ```bash
-please --workspace . run run_frontend
+broski --workspace . run run_frontend
 ```
 
 Frontend URL:
