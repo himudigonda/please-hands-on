@@ -91,7 +91,7 @@ export function App() {
     <main className="container">
       <header className="hero">
         <h1>TaskPulse</h1>
-        <p>Fullstack benchmark lab for make vs just vs please.</p>
+        <p>Fullstack benchmark lab for make, just, and broski.</p>
       </header>
 
       <section className="layout">
@@ -142,3 +142,5 @@ export function App() {
     </main>
   );
 }
+
+// BENCHMARK_MUTATION_broski_1_RUN

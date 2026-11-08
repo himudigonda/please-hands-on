@@ -1,0 +1,73 @@
+version = "0.5"
+
+setup:
+    @mode interactive
+    @isolation off
+    PY=$(./scripts/select_python.sh)
+    "$PY" -m venv --clear backend/.venv
+    backend/.venv/bin/pip install -r backend/requirements-dev.txt
+    cd frontend && npm install
+
+db_reset:
+    @in backend/scripts/reset_db.py backend/app/**/*.py
+    @out backend/data/app.db
+    @isolation off
+    PYTHONPATH=backend backend/.venv/bin/python backend/scripts/reset_db.py
+
+backend_test: db_reset
+    @in backend/app/**/*.py backend/tests/**/*.py
+    @out .broski/stamps/backend_test.ok
+    @isolation off
+    mkdir -p .broski/stamps
+    PYTHONPATH=backend backend/.venv/bin/pytest backend/tests -q
+    printf 'ok\n' > .broski/stamps/backend_test.ok
+
+frontend_build: backend_test
+    @in frontend/package.json frontend/package-lock.json frontend/src/**/* frontend/vite.config.ts frontend/index.html frontend/tsconfig.json frontend/tsconfig.app.json frontend/tsconfig.node.json shared/task.schema.json
+    @out frontend/dist
+    @dir frontend
+    @isolation off
+    npm run test -- --run
+    npm run build
+
+ci: frontend_build
+    @in broskifile
+    @out .broski/stamps/ci.ok
+    @isolation off
+    mkdir -p .broski/stamps
+    printf 'ok\n' > .broski/stamps/ci.ok
+
+bench_passthrough:
+     interactive
+     off
+    echo passthrough
+
+interactive_smoke:
+    @mode interactive
+    @isolation off
+    echo interactive-smoke
+
+run_backend:
+    @mode interactive
+    @isolation off
+    PYTHONPATH=backend backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+
+run_frontend:
+    @mode interactive
+    @dir frontend
+    @isolation off
+    npm run dev
+
+clean:
+    @mode interactive
+    @isolation off
+    rm -rf backend/.pytest_cache
+    rm -f backend/data/app.db
+    rm -rf frontend/dist frontend/.vite
+    rm -f benchmark/benchmark.csv benchmark/benchmark.txt benchmark/comparison.md
+
+bench:
+    @in scripts/benchmark.py broskifile broskifile.v051 broskifile.v060 Makefile justfile backend/app/**/*.py backend/tests/**/*.py frontend/src/**/* frontend/package.json frontend/package-lock.json frontend/vite.config.ts frontend/tsconfig.json frontend/tsconfig.app.json frontend/tsconfig.node.json
+    @out benchmark/benchmark.csv benchmark/benchmark.txt benchmark/comparison.md
+    @isolation off
+    python3 scripts/benchmark.py

@@ -48,7 +48,7 @@ resolve_broski_bin() {
   fi
 
   local dev_bin
-  dev_bin="$HOME/Documents/Projects/Broski/target/debug/broski"
+  dev_bin="$HOME/Documents/Projects/Please/target/debug/broski"
   if [[ -x "$dev_bin" ]] && check_broski_compatible "$dev_bin"; then
     printf '%s\n' "$dev_bin"
     return
