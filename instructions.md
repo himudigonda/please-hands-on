@@ -7,247 +7,75 @@ Related docs:
 ## 1. Prerequisites
 
 Required tools:
-- `python3` (3.11+; 3.13/3.12 preferred if multiple are installed)
-- `node` + `npm` (Node 20+ recommended)
+- `python3` (3.11+)
+- `node` + `npm`
 - `make`
 - `just`
-- `broski`
-- Optional for Docker mode: `docker`, `docker compose`
+- `git`
+- `cargo`
 
-Install `broski` quickly:
+## 2. Build Broski Binaries (Before/After)
+
+Run from the Broski repo:
 
 ```bash
-# latest release channel (default)
-curl -fsSL https://raw.githubusercontent.com/himudigonda/Broski/main/install.sh | bash
+cd /Users/himudigonda/Documents/Projects/BroSki
+mkdir -p /Users/himudigonda/Desktop/test/benchmark/bin
 
-# stable-only channel
-curl -fsSL https://raw.githubusercontent.com/himudigonda/Broski/main/install.sh | BROSKI_CHANNEL=stable bash
+# baseline v0.5.1
+rm -rf /tmp/broski-v051
+git worktree add /tmp/broski-v051 v0.5.1
+cd /tmp/broski-v051
+cargo build -p broski-cli
+cp target/debug/broski /Users/himudigonda/Desktop/test/benchmark/bin/broski-v051
 
-# pinned release candidate
-curl -fsSL https://raw.githubusercontent.com/himudigonda/Broski/main/install.sh | BROSKI_VERSION=v0.5.0 bash
+# candidate (current branch)
+cd /Users/himudigonda/Documents/Projects/BroSki
+cargo build -p broski-cli
+cp target/debug/broski /Users/himudigonda/Desktop/test/benchmark/bin/broski-v060
 ```
 
-Quick checks:
+## 3. Run Setup Once
 
 ```bash
-python3 --version
-python3.13 --version  # optional if installed
-node --version
-npm --version
-make --version
-just --version
-broski --version
+cd /Users/himudigonda/Desktop/test
+benchmark/bin/broski-v060 --workspace . run setup
 ```
 
-Python interpreter selection in this repo:
-- `setup` auto-selects in this order: `python3.13`, `python3.12`, `python3.11`, `python3`.
-
-Broski binary selection:
-- The benchmark harness auto-detects a compatible `broski` binary for this `broskifile` schema.
-- This project uses `broskifile` schema `0.5`, so use `broski >= 0.5.1`.
-- If your PATH `broski` is older, set:
-  ```bash
-  export BROSKI_BIN=/absolute/path/to/broski
-  export PLEASE="${BROSKI_BIN}"
-  ```
-  Then run commands with `$PLEASE` instead of `broski`.
-
-## 2. One-command Setup Per Runner
-
-All three commands do the same setup:
+## 4. Run Stable vs Candidate Benchmark
 
 ```bash
-cd broski-hands-on
-
-make setup
-just setup
-broski --workspace . run setup
-# or, if PATH broski is older:
-$PLEASE --workspace . run setup
-```
-
-Notes:
-- Setup creates `backend/.venv` and installs Python dependencies.
-- Setup installs frontend dependencies in `frontend/node_modules`.
-
-## 3. Run the Project Locally (UI + API)
-
-Backend:
-
-```bash
-make run_backend
-# or: just run_backend
-# or: broski --workspace . run run_backend
-```
-
-Frontend (separate terminal):
-
-```bash
-make run_frontend
-# or: just run_frontend
-# or: broski --workspace . run run_frontend
-```
-
-Open UI at: [http://127.0.0.1:5173](http://127.0.0.1:5173)
-
-Backend API at: [http://127.0.0.1:8000/api/health](http://127.0.0.1:8000/api/health)
-
-Smoke check while both are running:
-
-```bash
-python3 scripts/smoke.py
-```
-
-## 4. Optional Docker Mode
-
-```bash
-docker compose up --build
-```
-
-Then open:
-- UI: [http://127.0.0.1:5173](http://127.0.0.1:5173)
-- API health: [http://127.0.0.1:8000/api/health](http://127.0.0.1:8000/api/health)
-
-This mode is for demonstration only and is not timed in benchmarks.
-If endpoints do not respond immediately, wait 10-30 seconds for first startup.
-
-## 5. Benchmark Execution
-
-Run benchmark harness:
-
-```bash
+cd /Users/himudigonda/Desktop/test
+BROSKI_BASELINE_BIN=benchmark/bin/broski-v051 \
+BROSKI_CANDIDATE_BIN=benchmark/bin/broski-v060 \
+COMPARE_MODE=both \
 python3 scripts/benchmark.py
 ```
 
-Or via runner task:
-
-```bash
-make bench
-just bench
-broski --workspace . run bench
-# or:
-$PLEASE --workspace . run bench
-```
-
-Artifacts produced:
+Artifacts:
 - `benchmark/benchmark.csv`
 - `benchmark/benchmark.txt`
+- `benchmark/comparison.md`
 
-## 6. Reproduce Captured Outputs
-
-Generate full runner command outputs and benchmark artifacts:
-
-```bash
-./scripts/capture_outputs.sh
-```
-
-This command captures deterministic logs for:
-- `make`: `clean setup db_reset backend_test frontend_build ci bench`
-- `just`: `clean setup db_reset backend_test frontend_build ci bench`
-- `broski`: `clean setup db_reset backend_test frontend_build ci bench` (with `--explain`)
-
-The script writes section headers with command, timestamp, exit code, and elapsed seconds.
-
-## 7. Where to Find Logs and Reports
-
-All committed artifacts are in `benchmark/`:
-- `benchmark.csv`
-- `benchmark.txt`
-- `make_ouptut.txt` (intentional typo retained)
-- `make_output.txt`
-- `just_output.txt`
-- `system_info.txt`
-- `tool_versions.txt`
-- `artifact_manifest.txt`
-
-## 8. What Benchmark Scenarios Mean
-
-Scenarios measured per tool (`make`, `just`, `broski`):
-- `cold_ci`: clean outputs and run full `ci`.
-- `warm_ci`: run `ci` twice; second run measured.
-- `touch_no_content_backend`: touch backend file without changing content.
-- `content_change_backend`: mutate backend source and run `ci`.
-- `content_change_frontend`: mutate frontend source and run `ci`.
-
-Each scenario runs:
-- 1 warmup iteration
-- 7 measured iterations
-
-Interpretation guidance:
-- Expect `broski` to be strongest on warm reruns and touch-without-content runs because it can skip unchanged tasks via content hashing.
-- Cold runs and true content-change runs can be slower in this lab because Broski stages execution and validates task contracts.
-- Use `broski --workspace . run ci --explain` to verify exactly why a task reran.
-
-## 9. Realtime Demo Commands
-
-Run each runner CI path:
+## 5. Switch Active Local Broski Symlink (Optional)
 
 ```bash
-make ci
-just ci
-broski --workspace . run ci --explain
-# or:
-$PLEASE --workspace . run ci --explain
+./scripts/use_broski.sh baseline
+./scripts/use_broski.sh candidate
+./scripts/use_broski.sh show
 ```
 
-Touch-without-content behavior:
+## 6. Functional Smoke Commands
 
 ```bash
-touch backend/app/main.py
-make ci
-just ci
-broski --workspace . run ci --explain
-# or:
-$PLEASE --workspace . run ci --explain
+benchmark/bin/broski-v060 --workspace . run ci --explain
+benchmark/bin/broski-v060 --workspace . ci --jobs=4
+benchmark/bin/broski-v060 --workspace . doctor
+benchmark/bin/broski-v060 --workspace . cache prune --max-size 512
 ```
 
-The `--explain` output should show whether Broski reused cache or why it rebuilt.
+## 7. Troubleshooting
 
-## 10. Troubleshooting
-
-### Port already in use
-- Kill existing servers on `8000` or `5173`.
-- macOS helper:
-  ```bash
-  lsof -i :8000
-  lsof -i :5173
-  ```
-
-### Missing tool on PATH
-- Install missing tool and re-run setup.
-- Verify with `command -v <tool>`.
-- If `broski` on PATH is older than 0.5:
-  ```bash
-  export BROSKI_BIN=/absolute/path/to/broski
-  export PLEASE="${BROSKI_BIN}"
-  ```
-
-### Stale cache/artifacts
-- Clean project artifacts:
-  ```bash
-  make clean
-  # or just clean
-  # or broski --workspace . run clean
-  ```
-
-### SQLite permission/reset issues
-- Ensure `backend/data/` is writable.
-- Reset DB:
-  ```bash
-  make db_reset
-  # or just db_reset
-  # or broski --workspace . run db_reset
-  ```
-
-## 11. Task Surface (Parity)
-
-All three runners expose the same semantic tasks:
-- `setup`
-- `db_reset`
-- `backend_test`
-- `frontend_build`
-- `ci`
-- `run_backend`
-- `run_frontend`
-- `clean`
-- `bench`
+- If baseline fails to parse: verify `scripts/benchmark.py` switches to `broskifile.v051`.
+- If candidate fails in strict staging: verify `broskifile.v060` includes required `@in` and `@stage_ro` paths.
+- If `make`/`just` missing, install them or set `TOOL_FILTER=broski`.

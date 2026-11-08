@@ -20,6 +20,13 @@ frontend_build:
 
 ci: db_reset backend_test frontend_build
 
+bench_passthrough value="bench-default":
+    mkdir -p .broski/stamps
+    printf '%s\n' "{{ value }}" > .broski/stamps/passthrough-{{ value }}.ok
+
+interactive_smoke:
+    echo interactive-smoke
+
 run_backend:
     PYTHONPATH=backend backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 
@@ -30,8 +37,8 @@ clean:
     rm -rf backend/.pytest_cache
     rm -f backend/data/app.db
     rm -rf frontend/dist frontend/.vite
-    rm -rf .please
-    rm -f benchmark/benchmark.csv benchmark/benchmark.txt
+    rm -rf .broski
+    rm -f benchmark/benchmark.csv benchmark/benchmark.txt benchmark/comparison.md
 
 bench:
     python3 scripts/benchmark.py

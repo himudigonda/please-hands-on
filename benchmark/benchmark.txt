@@ -1,56 +1,54 @@
 TaskPulse Benchmark Report
-Generated: 2026-03-05T23:19:42
+Generated: 2026-03-07T12:33:33
 
 System
-- platform: macOS-26.3-arm64-arm-64bit
-- python: 3.9.6
+- platform: macOS-26.3-arm64-arm-64bit-Mach-O
+- python: 3.14.3
 - make: GNU Make 3.81
 - just: just 1.46.0
-- broski: broski 0.5.1
-
-Scenario Statistics (seconds)
+- broski_baseline: broski 0.5.2
+- broski_candidate: broski 0.6.1
 
 ## cold_ci
-- just: mean=2.9625 median=2.9410 p95=3.1010 stddev=0.0665
-- make: mean=2.9724 median=2.9519 p95=3.0299 stddev=0.0322
-- broski: mean=10.9749 median=10.9669 p95=11.1974 stddev=0.1372
-- speedup ratios vs broski (mean):
-  - just: 0.27x
-  - make: 0.27x
-  - broski: 1.00x
+- v0.5.1/broski: mean=10.3987 median=10.3926 p95=10.4799 stddev=0.0431 failures=0/7
+- v0.6.0-candidate/broski: mean=2.7966 median=2.7963 p95=2.8132 stddev=0.0103 failures=0/7
 
 ## warm_ci
-- broski: mean=0.0118 median=0.0117 p95=0.0128 stddev=0.0006
-- make: mean=2.8641 median=2.8715 p95=2.8921 stddev=0.0191
-- just: mean=2.8883 median=2.8424 p95=3.2170 stddev=0.1407
-- speedup ratios vs broski (mean):
-  - broski: 1.00x
-  - make: 242.25x
-  - just: 244.29x
+- v0.5.1/broski: mean=0.0142 median=0.0140 p95=0.0156 stddev=0.0010 failures=0/7
+- v0.6.0-candidate/broski: mean=0.0219 median=0.0218 p95=0.0226 stddev=0.0005 failures=0/7
 
 ## touch_no_content_backend
-- broski: mean=0.0116 median=0.0115 p95=0.0122 stddev=0.0005
-- make: mean=2.8934 median=2.8920 p95=2.9427 stddev=0.0374
-- just: mean=2.8944 median=2.8885 p95=3.0680 stddev=0.0783
-- speedup ratios vs broski (mean):
-  - broski: 1.00x
-  - make: 249.23x
-  - just: 249.32x
+- v0.5.1/broski: mean=0.0137 median=0.0135 p95=0.0144 stddev=0.0006 failures=0/7
+- v0.6.0-candidate/broski: mean=0.0221 median=0.0221 p95=0.0227 stddev=0.0005 failures=0/7
 
 ## content_change_backend
-- just: mean=2.8019 median=2.7990 p95=2.8844 stddev=0.0381
-- make: mean=2.8582 median=2.8500 p95=2.9096 stddev=0.0360
-- broski: mean=3.6427 median=3.6410 p95=3.6939 stddev=0.0298
-- speedup ratios vs broski (mean):
-  - just: 0.77x
-  - make: 0.78x
-  - broski: 1.00x
+- v0.5.1/broski: mean=3.5871 median=3.5478 p95=3.8835 stddev=0.1235 failures=0/7
+- v0.6.0-candidate/broski: mean=0.5066 median=0.5063 p95=0.5163 stddev=0.0056 failures=0/7
 
 ## content_change_frontend
-- just: mean=2.8984 median=2.8883 p95=2.9766 stddev=0.0465
-- make: mean=2.9335 median=2.9078 p95=3.0555 stddev=0.0558
-- broski: mean=5.6158 median=5.6281 p95=5.7091 stddev=0.0598
-- speedup ratios vs broski (mean):
-  - just: 0.52x
-  - make: 0.52x
-  - broski: 1.00x
+- v0.5.1/broski: mean=5.4311 median=5.4221 p95=5.4825 stddev=0.0325 failures=0/7
+- v0.6.0-candidate/broski: mean=2.3333 median=2.3282 p95=2.3534 stddev=0.0127 failures=0/7
+
+## cache_explain_hit
+- v0.5.1/broski: mean=0.0135 median=0.0135 p95=0.0141 stddev=0.0005 failures=0/7
+- v0.6.0-candidate/broski: mean=0.0224 median=0.0224 p95=0.0228 stddev=0.0003 failures=0/7
+
+## cache_bypass_no_cache
+- v0.5.1/broski: mean=10.4738 median=10.4683 p95=10.6004 stddev=0.0642 failures=0/7
+- v0.6.0-candidate/broski: mean=2.8172 median=2.8185 p95=2.8413 stddev=0.0149 failures=0/7
+
+## cache_bypass_force
+- v0.5.1/broski: mean=10.4727 median=10.4689 p95=10.5503 stddev=0.0469 failures=0/7
+- v0.6.0-candidate/broski: mean=2.8300 median=2.8300 p95=2.8501 stddev=0.0099 failures=0/7
+
+## dry_run_ci
+- v0.5.1/broski: mean=0.0132 median=0.0132 p95=0.0135 stddev=0.0002 failures=0/7
+- v0.6.0-candidate/broski: mean=0.0207 median=0.0207 p95=0.0216 stddev=0.0006 failures=0/7
+
+## passthrough_path
+- v0.5.1/broski: mean=0.0147 median=0.0148 p95=0.0150 stddev=0.0003 failures=0/7
+- v0.6.0-candidate/broski: mean=0.0149 median=0.0150 p95=0.0156 stddev=0.0005 failures=0/7
+
+## interactive_smoke
+- v0.5.1/broski: mean=0.0139 median=0.0138 p95=0.0152 stddev=0.0008 failures=0/7
+- v0.6.0-candidate/broski: mean=0.0140 median=0.0133 p95=0.0168 stddev=0.0013 failures=0/7

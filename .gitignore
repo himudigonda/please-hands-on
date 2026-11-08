@@ -12,7 +12,6 @@ frontend/.vite/
 frontend/*.tsbuildinfo
 
 # Local runtime/cache
-.please/
 .broski/
 backend/data/*.db
 benchmark/live/
@@ -21,3 +20,6 @@ benchmark/live/
 .DS_Store
 .vscode/
 .idea/
+
+benchmark/bin/
+frontend/.please/

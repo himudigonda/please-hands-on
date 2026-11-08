@@ -10,12 +10,14 @@ setup:
 
 db_reset:
     @in backend/scripts/reset_db.py backend/app/**/*.py
+    @stage_ro backend/.venv
     @out backend/data/app.db
     @isolation off
     PYTHONPATH=backend backend/.venv/bin/python backend/scripts/reset_db.py
 
 backend_test: db_reset
     @in backend/app/**/*.py backend/tests/**/*.py
+    @stage_ro backend/.venv
     @out .broski/stamps/backend_test.ok
     @isolation off
     mkdir -p .broski/stamps
@@ -23,7 +25,8 @@ backend_test: db_reset
     printf 'ok\n' > .broski/stamps/backend_test.ok
 
 frontend_build: backend_test
-    @in frontend/package.json frontend/src/**/* frontend/vite.config.ts frontend/index.html shared/task.schema.json
+    @in frontend/package.json frontend/package-lock.json frontend/src/**/* frontend/vite.config.ts frontend/index.html frontend/tsconfig.json frontend/tsconfig.app.json frontend/tsconfig.node.json shared/task.schema.json
+    @stage_ro frontend/node_modules
     @out frontend/dist
     @dir frontend
     @isolation off
@@ -36,6 +39,16 @@ ci: frontend_build
     @isolation off
     mkdir -p .broski/stamps
     printf 'ok\n' > .broski/stamps/ci.ok
+
+bench_passthrough:
+     interactive
+     off
+    echo passthrough
+
+interactive_smoke:
+    @mode interactive
+    @isolation off
+    echo interactive-smoke
 
 run_backend:
     @mode interactive
@@ -54,10 +67,10 @@ clean:
     rm -rf backend/.pytest_cache
     rm -f backend/data/app.db
     rm -rf frontend/dist frontend/.vite
-    rm -f benchmark/benchmark.csv benchmark/benchmark.txt
+    rm -f benchmark/benchmark.csv benchmark/benchmark.txt benchmark/comparison.md
 
 bench:
-    @in scripts/benchmark.py broskifile Makefile justfile backend/app/**/*.py backend/tests/**/*.py frontend/src/**/* frontend/package.json frontend/vite.config.ts
-    @out benchmark/benchmark.csv benchmark/benchmark.txt
+    @in scripts/benchmark.py broskifile broskifile.v051 broskifile.v060 Makefile justfile backend/app/**/*.py backend/tests/**/*.py frontend/src/**/* frontend/package.json frontend/package-lock.json frontend/vite.config.ts frontend/tsconfig.json frontend/tsconfig.app.json frontend/tsconfig.node.json
+    @out benchmark/benchmark.csv benchmark/benchmark.txt benchmark/comparison.md
     @isolation off
     python3 scripts/benchmark.py

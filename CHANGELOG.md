@@ -5,5 +5,5 @@
 - Added TaskPulse fullstack benchmark lab (React + FastAPI + SQLite).
 - Added runner parity with `Makefile`, `justfile`, and `broskifile`.
 - Added reproducible benchmark harness and reports (`benchmark.csv`, `benchmark.txt`).
-- Added captured command output artifacts for make/just/please.
+- Added captured command output artifacts for make/just/broski.
 - Added Docker demonstration mode and full usage instructions.

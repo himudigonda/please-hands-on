@@ -50,7 +50,7 @@ def seed_if_empty(conn: sqlite3.Connection) -> None:
 
     seeds = [
         ("Ship benchmark harness", 0),
-        ("Compare make/just/please", 0),
+        ("Compare make/just/broski", 0),
         ("Write instructions", 1),
     ]
     conn.executemany("INSERT INTO tasks(title, completed) VALUES(?, ?)", seeds)

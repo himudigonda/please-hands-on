@@ -6,7 +6,7 @@ PIP := backend/.venv/bin/pip
 PYTEST := backend/.venv/bin/pytest
 UVICORN := backend/.venv/bin/uvicorn
 
-.PHONY: setup db_reset backend_test frontend_build ci run_backend run_frontend clean bench
+.PHONY: setup db_reset backend_test frontend_build ci bench_passthrough interactive_smoke run_backend run_frontend clean bench
 
 setup:
 	$(PYTHON_BOOTSTRAP) -m venv --clear backend/.venv
@@ -25,6 +25,13 @@ frontend_build:
 
 ci: db_reset backend_test frontend_build
 
+bench_passthrough:
+	mkdir -p .broski/stamps
+	printf '%s\n' "$(VALUE)" > .broski/stamps/passthrough-$(VALUE).ok
+
+interactive_smoke:
+	@echo interactive-smoke
+
 run_backend:
 	PYTHONPATH=backend $(UVICORN) app.main:app --host 127.0.0.1 --port 8000 --reload
 
@@ -35,8 +42,8 @@ clean:
 	rm -rf backend/.pytest_cache
 	rm -f backend/data/app.db
 	rm -rf frontend/dist frontend/.vite
-	rm -rf .please
-	rm -f benchmark/benchmark.csv benchmark/benchmark.txt
+	rm -rf .broski
+	rm -f benchmark/benchmark.csv benchmark/benchmark.txt benchmark/comparison.md
 
 bench:
 	python3 scripts/benchmark.py
